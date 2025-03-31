@@ -12,9 +12,12 @@
   "type": "commonjs",
   "dependencies": {
     "@tsconfig/node20": "^20.1.5",
-    "@types/node": "^22.13.14",  
-      "express": "^5.1.0",
+    "@types/node": "^22.13.14",
+    "express": "^5.1.0",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1"
   }
 }
