@@ -3,8 +3,6 @@ import books from "./server";
 // import cors from "cors";
 const booksRouter = express.Router();
 
-module.exports = booksRouter;
-
 interface Book {
   id: number;
   title: string;
@@ -60,3 +58,5 @@ booksRouter.delete("/:id", (req: Request, res: Response) => {
     res.status(404).json({ message: "Book not found" });
   }
 });
+
+module.exports = booksRouter;
