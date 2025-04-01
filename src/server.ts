@@ -28,11 +28,11 @@ const books: Book[] = [
   },
 ];
 
-booksRouter.get("/books", (req: Request, res: Response) => {
+booksRouter.get("/", (req: Request, res: Response) => {
   res.send(books);
 });
 
-booksRouter.get("/books/:id", (req: Request, res: Response) => {
+booksRouter.get("/:id", (req: Request, res: Response) => {
   const book = parseInt(req.params.id);
   if (book) {
     res.send(book);
@@ -42,8 +42,8 @@ booksRouter.get("/books/:id", (req: Request, res: Response) => {
 });
 
 booksRouter.put("/", (req: Request, res: Response) => {});
-booksRouter.post("/id:", (req: Request, res: Response) => {});
-booksRouter.delete("/id:", (req: Request, res: Response) => {});
+booksRouter.post("/:id", (req: Request, res: Response) => {});
+booksRouter.delete("/:id", (req: Request, res: Response) => {});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
