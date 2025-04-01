@@ -1,4 +1,5 @@
 Back end server for the Bookclub app
+using node.js and typescript
 It should have:
 
 1. create book
