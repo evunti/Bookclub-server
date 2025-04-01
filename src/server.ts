@@ -8,6 +8,17 @@ app.use(express.json());
 // app.use(cors());
 const PORT = process.env.PORT || 8000;
 
+const books: Book[] = [
+  { id: 1, title: "Educated", author: "Tara Westover" },
+  {
+    id: 2,
+    title: "The Hitchhiker's Guide to the Galaxy",
+    author: "Douglas Adams",
+  },
+];
+
+export default books;
+
 interface Book {
   id: number;
   title: string;

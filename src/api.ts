@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-
+import books from "./server";
 // import cors from "cors";
 const booksRouter = express.Router();
 
@@ -10,15 +10,6 @@ interface Book {
   title: string;
   author: string;
 }
-
-const books: Book[] = [
-  { id: 1, title: "Educated", author: "Tara Westover" },
-  {
-    id: 2,
-    title: "The Hitchhiker's Guide to the Galaxy",
-    author: "Douglas Adams",
-  },
-];
 
 booksRouter.get("/", (req: Request, res: Response) => {
   res.send(books);
