@@ -24,13 +24,39 @@ booksRouter.get("/:id", (req: Request, res: Response) => {
   }
 });
 
-booksRouter.post("/:id", (req: Request, res: Response) => {
+booksRouter.post("/", (req: Request, res: Response) => {
+  const newBook: Book = {
+    id: books.length + 1,
+    title: req.body.title,
+    author: req.body.author,
+  };
+  books.push(newBook);
+  res.status(201).json(newBook);
+});
+
+booksRouter.put("/:id", (req: Request, res: Response) => {
   const book = parseInt(req.params.id);
   const bookIndex = books.findIndex((i) => i.id === book);
-  if (book !== -1) {
+
+  if (bookIndex !== -1) {
+    books[bookIndex] = {
+      id: book,
+      title: req.body.title,
+      author: req.body.author,
+    };
+    res.json(books[bookIndex]);
+  } else {
+    res.status(404).json({ message: "Book not found" });
   }
 });
 
-booksRouter.put("/", (req: Request, res: Response) => {});
-
-booksRouter.delete("/:id", (req: Request, res: Response) => {});
+booksRouter.delete("/:id", (req: Request, res: Response) => {
+  const book = parseInt(req.params.id);
+  const bookIndex = books.findIndex((i) => i.id === book);
+  if (bookIndex !== -1) {
+    books.splice(bookIndex, 1);
+    res.status(204).send();
+  } else {
+    res.status(404).json({ message: "Book not found" });
+  }
+});
