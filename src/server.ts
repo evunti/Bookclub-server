@@ -13,12 +13,27 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8000;
 
-booksRouter.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send(getAllFromDatabase("books"));
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+}
+
+const books: Book[] = [
+  { id: 1, title: "Educated", author: "Tara Westover" },
+  {
+    id: 2,
+    title: "The Hitchhiker's Guide to the Galaxy",
+    author: "Douglas Adams",
+  },
+];
+
+booksRouter.get("/books", (req: Request, res: Response) => {
+  res.send(books);
 });
 
-booksRouter.get("/id:", (req: Request, res: Response, next: NextFunction) => {
-  const book = getBookById(req.params.id, books);
+booksRouter.get("/books/:id", (req: Request, res: Response) => {
+  const book = parseInt(req.params.id);
   if (book) {
     res.send(book);
   } else {
@@ -26,15 +41,9 @@ booksRouter.get("/id:", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-booksRouter.put("/", (req: Request, res: Response, next: NextFunction) => {});
-booksRouter.post(
-  "/id:",
-  (req: Request, res: Response, next: NextFunction) => {}
-);
-booksRouter.delete(
-  "/id:",
-  (req: Request, res: Response, next: NextFunction) => {}
-);
+booksRouter.put("/", (req: Request, res: Response) => {});
+booksRouter.post("/id:", (req: Request, res: Response) => {});
+booksRouter.delete("/id:", (req: Request, res: Response) => {});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
