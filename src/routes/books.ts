@@ -8,6 +8,7 @@ interface Book {
   id: number;
   title: string;
   author: string;
+  pages: number;
 }
 
 booksRouter.get("/", async (req: Request, res: Response) => {
@@ -50,5 +51,25 @@ booksRouter.get("/:id", async (req: Request, res: Response) => {
 //     res.status(404).json({ message: "Book not found" });
 //   }
 // });
+
+// booksRouter.delete(
+//   "/:id",
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const bookId = parseInt(req.params.id); // Extract the book ID from the URL
+//       if (isNaN(bookId)) {
+//         return res.status(400).json({ message: "Invalid book ID" });
+//       }
+
+//       await deleteBookById(bookId); // Call the function to delete the book
+//       res.status(204).send(); // Respond with 204 No Content if successful
+//     } catch (error) {
+//       console.error(error);
+//       res
+//         .status(500)
+//         .json({ message: "An error occurred while deleting the book" });
+//     }
+//   }
+// );
 
 export { booksRouter };
