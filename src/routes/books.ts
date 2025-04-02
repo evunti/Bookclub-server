@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
-import { getAllBooks, getBookById } from "../models/books";
+import { getAllBooks, getBookById, deleteBookById } from "../models/books";
+
 // import cors from "cors";
 const booksRouter = express.Router();
 

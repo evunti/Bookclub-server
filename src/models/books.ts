@@ -17,3 +17,11 @@ export const getBookById = async (bookId: number) => {
     where: eq(books.id, bookId),
   });
 };
+
+// export const addBookById = async () => {
+// return await db.query.bookIndex.findFirst
+// };
+
+export const deleteBookById = async (bookId: number) => {
+  await db.delete(books).where(eq(books.id, bookId));
+};
