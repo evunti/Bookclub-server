@@ -51,7 +51,16 @@ booksRouter.get("/:id", async (req: Request, res: Response) => {
 //     res.status(404).json({ message: "Book not found" });
 //   }
 // });
-
+booksRouter.delete("/:id", async (req, res) => {
+  const book = await getBookById(parseInt(req.params.id));
+  if (book !== undefined) {
+    const books = await getAllBooks();
+    const updatedBooks = books.filter((i) => i.id !== book.id);
+    res.status(204).send(updatedBooks);
+  } else {
+    res.status(404).json({ message: "Book not found" });
+  }
+});
 // booksRouter.delete(
 //   "/:id",
 //   async (req: Request, res: Response, next: NextFunction) => {
