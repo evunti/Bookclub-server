@@ -20,9 +20,15 @@ export const getBookById = async (bookId: number) => {
 };
 
 // export const addBookById = async () => {
-// return await db.query.bookIndex.findFirst
+//  await db.add.bookIndex.findFirst
 // };
 
+export const updateBookByID = async (bookId: number, updateBook: ) => {
+  return await db.update(books)
+  .set(books)
+  .where(eq(books.id, bookId));
+};
+// do I need a seperate handler for each data type within the book?
 export const deleteBookById = async (bookId: number) => {
   await db.delete(books).where(eq(books.id, bookId));
 };
