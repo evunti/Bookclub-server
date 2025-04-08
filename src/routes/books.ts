@@ -1,4 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
+import { db } from "../db";
+import { books } from "../schema";
 import {
   getAllBooks,
   getBookById,
@@ -30,24 +32,54 @@ booksRouter.get("/:id", async (req: Request, res: Response) => {
   }
 });
 // creatbook api:
-// booksRouter.post("/:id", (req: Request, res: Response) => {
-// });
+booksRouter.post("/", async (req: Request, res: Response) => {
+  try {
+    const { title, author, pages } = req.body;
 
-// booksRouter.put("/:id", (req: Request, res: Response) => {
-//   const book = parseInt(req.params.id);
-//   const bookIndex = books.findIndex((i) => i.id === book);
+    if (!title || !author || !pages) {
+      return res.status(400).json({
+        error: "Please fill out all the fields",
+      });
+    }
 
-//   if (bookIndex !== -1) {
-//     books[bookIndex] = {
-//       id: book,
-//       title: req.body.title,
-//       author: req.body.author,
-//     };
-//     res.json(books[bookIndex]);
-//   } else {
-//     res.status(404).json({ message: "Book not found" });
-//   }
-// });
+    const result = await db.insert(books).values({
+      title,
+      author,
+      pages,
+    });
+
+    res
+      .status(201)
+      .json({ message: "Book created successfully", book: result });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the book" });
+  }
+});
+booksRouter.put("/:id", async (req: Request, res: Response) => {
+  try {
+    const bookId = parseInt(req.params.id); // Extract the book ID from the URL
+    if (isNaN(bookId)) {
+      return res.status(400).json({ message: "Invalid book ID" }); // Handle invalid IDs
+    }
+
+    const updatedData = req.body; // Get the updated data from the request body
+    const result = await updateBookByID(bookId, updatedData); // Call the update function
+
+    if (result) {
+      return res.status(200).json({ message: "Book updated successfully" }); // Success response
+    } else {
+      return res.status(404).json({ message: "Book not found" }); // Book not found
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while updating the book" }); // Handle server errors
+  }
+});
 
 booksRouter.delete("/:id", async (req, res) => {
   const book = await getBookById(parseInt(req.params.id));
