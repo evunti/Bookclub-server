@@ -5,4 +5,5 @@ export const books = sqliteTable("books", {
   title: text().notNull(),
   author: text().notNull(),
   pages: int(),
+  coverUrl: text(),
 });

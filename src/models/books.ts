@@ -26,7 +26,7 @@ export const addNewBook = async (newBook: Book) => {
 export const updateBookByID = async (bookId: number, updateBook: Book) => {
   return await db.update(books).set(updateBook).where(eq(books.id, bookId));
 };
-// do I need a seperate handler for each data type within the book?
+
 export const deleteBookById = async (bookId: number) => {
   await db.delete(books).where(eq(books.id, bookId));
 };
