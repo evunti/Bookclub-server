@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,                  // Allow importing JSON files
     "outDir": "dist",                           // Compiled JS output
-    "rootDir": "src",                           // Your source folder
+    "rootDir": ".",                           // Your source folder
     "allowSyntheticDefaultImports": true,
     "types": ["node"],                          // Include Node.js types
     "noImplicitAny": true,
