@@ -8,7 +8,6 @@ import {
   updateBookByID,
 } from "../models/books";
 
-// import cors from "cors";
 const booksRouter = express.Router();
 
 async function getBookCoverURL(
@@ -27,17 +26,17 @@ async function getBookCoverURL(
       throw new Error(`Failed to fetch image: ${response.statusText}`);
     }
 
-    const data = await response.json(); // Get the JSON response
-    return data.url; // Return the image URL
+    const data = await response.json();
+    return data.url;
   } catch (error) {
     console.error(error);
-    return null; // Return null if fetch fails
+    return null;
   }
 }
 
 booksRouter
   .route("/")
-  .get(async (req: Request, res: Response) => {
+  .get(async (_: Request, res: Response) => {
     const books = await getAllBooks();
     res.send(books);
   })
@@ -87,9 +86,20 @@ booksRouter
       const bookId = parseInt(req.params.id);
       if (isNaN(bookId)) {
         res.status(400).json({ message: "Invalid book ID" });
+        return;
       }
 
       const updatedData = req.body;
+      // If coverUrl is missing but title/author are present, fetch and add it
+      if (!updatedData.coverUrl && updatedData.title && updatedData.author) {
+        const coverUrl = await getBookCoverURL(
+          updatedData.title,
+          updatedData.author
+        );
+        if (coverUrl) {
+          updatedData.coverUrl = coverUrl;
+        }
+      }
       const result = await updateBookByID(bookId, updatedData);
 
       if (result) {
