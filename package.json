@@ -19,16 +19,17 @@
     "@libsql/client": "^0.15.2",
     "@tsconfig/node20": "^20.1.5",
     "@types/node": "^22.13.14",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.41.0",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.8.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
+    "@types/express": "^4.17.22",
     "drizzle-kit": "^0.30.6",
     "tsx": "^4.19.3"
   }
