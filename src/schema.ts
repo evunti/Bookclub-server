@@ -11,6 +11,8 @@ export const books = sqliteTable("books", {
 export const users = sqliteTable("users", {
   id: int().primaryKey({ autoIncrement: true }),
   username: text().notNull().unique(),
+  email: text().notNull().unique(),
   passwordHash: text().notNull(), // Store hashed password, not plaintext
   isAdmin: int().notNull().default(0), // 1 for admin, 0 for regular user
+
 });

@@ -7,6 +7,7 @@ interface Book {
   title: string;
   author: string;
   pages: number;
+  coverUrl?: string;
 }
 
 export const getAllBooks = async () => {
@@ -23,7 +24,10 @@ export const addNewBook = async (newBook: Book) => {
   return await db.insert(books).values(newBook);
 };
 
-export const updateBookByID = async (bookId: number, updateBook: Book) => {
+export const updateBookByID = async (
+  bookId: number,
+  updateBook: Partial<Book>
+) => {
   return await db.update(books).set(updateBook).where(eq(books.id, bookId));
 };
 
