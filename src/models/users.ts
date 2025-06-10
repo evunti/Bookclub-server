@@ -6,7 +6,7 @@ interface User {
   id: number;
   username: string;
   email: string;
-  password: string;
+  passwordHash: string;
 }
 
 export const getAllUsers = async () => {
@@ -27,7 +27,7 @@ export const updateUserByID = async (
   userId: number,
   updateUser: Partial<User>
 ) => {
-  return await db.update(users).set(updateUser).where(eq(users.id, bookId));
+  return await db.update(users).set(updateUser).where(eq(users.id, userId));
 };
 
 export const deleteUserById = async (userId: number) => {
