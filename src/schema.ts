@@ -7,3 +7,10 @@ export const books = sqliteTable("books", {
   pages: int(),
   coverUrl: text(),
 });
+
+export const users = sqliteTable("users", {
+  id: int().primaryKey({ autoIncrement: true }),
+  username: text().notNull().unique(),
+  email: text().notNull().unique(),
+  password: text().notNull(),
+});
