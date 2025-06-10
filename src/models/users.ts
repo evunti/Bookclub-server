@@ -1,36 +1,35 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { books } from "../schema";
+import { users } from "../schema";
 
-interface Book {
+interface User {
   id: number;
-  title: string;
-  author: string;
-  pages: number;
-  coverUrl?: string;
+  username: string;
+  email: string;
+  password: string;
 }
 
-export const getAllBooks = async () => {
-  return await db.query.books.findMany();
+export const getAllUsers = async () => {
+  return await db.query.users.findMany();
 };
 
-export const getBookById = async (bookId: number) => {
-  return await db.query.books.findFirst({
-    where: eq(books.id, bookId),
+export const getUserById = async (userId: number) => {
+  return await db.query.users.findFirst({
+    where: eq(users.id, userId),
   });
 };
 
-export const addNewBook = async (newBook: Book) => {
-  return await db.insert(books).values(newBook);
+export const addNewUser = async (newUser: User) => {
+  return await db.insert(users).values(newUser);
 };
 
-export const updateBookByID = async (
-  bookId: number,
-  updateBook: Partial<Book>
+export const updateUserByID = async (
+  userId: number,
+  updateUser: Partial<User>
 ) => {
-  return await db.update(books).set(updateBook).where(eq(books.id, bookId));
+  return await db.update(users).set(updateUser).where(eq(users.id, bookId));
 };
 
-export const deleteBookById = async (bookId: number) => {
-  await db.delete(books).where(eq(books.id, bookId));
+export const deleteUserById = async (userId: number) => {
+  await db.delete(users).where(eq(users.id, userId));
 };
