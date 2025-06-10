@@ -18,6 +18,7 @@ router.post("/register", async (req, res) => {
       username,
       passwordHash,
       isAdmin: isAdmin ? 1 : 0,
+      email: req.body.email || "",
     });
     res.status(201).json({ message: "User created" });
   } catch (err) {

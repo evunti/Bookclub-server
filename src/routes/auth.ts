@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { db } from "../db";
-import { users } from "../schema";
+// import { db } from "../db";
+// import { users } from "../schema";
 import {
   getAllUsers,
   getUserById,
@@ -10,12 +10,10 @@ import {
 
 const usersRouter = express.Router();
 
-usersRouter
-  .route("/")
-  .get(async (_: Request, res: Response) => {
-    const users = await getAllUsers();
-    res.send(users);
-  })
+usersRouter.route("/").get(async (_: Request, res: Response) => {
+  const allUsers = await getAllUsers();
+  res.send(allUsers);
+});
 
 usersRouter
   .route("/:id")
@@ -34,14 +32,8 @@ usersRouter
         res.status(400).json({ message: "Invalid user ID" });
         return;
       }
-
       const updatedData = req.body;
-  
-          updatedData.username,
-        );
-      }
       const result = await updateUserByID(userId, updatedData);
-
       if (result) {
         res.status(200).json({ message: "User updated successfully" });
       } else {
@@ -64,4 +56,4 @@ usersRouter
     }
   });
 
-export {usersRouter };
+export { usersRouter };
