@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 
 const authRouter = Router();
 
-// Register a new user
 authRouter.post("/register", async (req, res) => {
   const { username, password, isAdmin } = req.body;
   if (!username || !password) {
@@ -22,7 +21,6 @@ authRouter.post("/register", async (req, res) => {
     });
     res.status(201).json({ message: "User created" });
   } catch (err) {
-    // Unique username error (sqlite)
     if (
       err &&
       typeof err === "object" &&
@@ -57,3 +55,5 @@ authRouter.post("/login", async (req, res) => {
 });
 
 export { authRouter };
+
+// add auth middleware - JWT?

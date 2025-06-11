@@ -10,7 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Api Routes
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/", booksRouter);
