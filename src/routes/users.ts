@@ -6,37 +6,19 @@ import {
   getUserById,
   deleteUserById,
   updateUserByID,
-  addNewUser,
 } from "../models/users";
 
 const usersRouter = express.Router();
 
-usersRouter
-  .route("/")
-  .get(async (_: Request, res: Response) => {
-    try {
-      const allUsers = await getAllUsers();
-      // Remove passwordHash from each user before sending
-      const safeUsers = allUsers.map(({ passwordHash, ...user }) => user);
-      res.send(safeUsers);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch users" });
-    }
-  })
-  .post(async (req: Request, res: Response) => {
-    try {
-      const { username, email, password } = req.body;
-      if (!username || !email || !password) {
-        return res.status(400).json({ message: "Missing required fields" });
-      }
-      const passwordHash = await bcrypt.hash(password, 10);
-      await addNewUser({ username, email, passwordHash });
-      res.status(201).json({ message: "User created" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to create user" });
-    }
-  });
+usersRouter.route("/").get(async (_: Request, res: Response) => {
+  try {
+    const allUsers = await getAllUsers();
+    const safeUsers = allUsers.map(({ passwordHash, ...user }) => user);
+    res.send(safeUsers);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+});
 
 usersRouter
   .route("/:id")
