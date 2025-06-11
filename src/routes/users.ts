@@ -60,7 +60,11 @@ usersRouter
         res.status(400).json({ message: "Invalid user ID" });
         return;
       }
-      const updatedData = req.body;
+      const updatedData = { ...req.body };
+      if (updatedData.password) {
+        updatedData.passwordHash = await bcrypt.hash(updatedData.password, 10);
+        delete updatedData.password;
+      }
       const result = await updateUserByID(userId, updatedData);
       if (result) {
         res.status(200).json({ message: "User updated successfully" });
