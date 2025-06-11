@@ -29,9 +29,7 @@ usersRouter
       const newUser = { username, email, passwordHash, isAdmin: 0 };
       try {
         const result = await addNewUser(newUser);
-        res
-          .status(201)
-          .json({ message: "User created", id: result.lastInsertRowid });
+        res.status(201).json({ message: "User created" });
       } catch (err: any) {
         if (
           err &&
