@@ -1,26 +1,69 @@
 import express, { Request, Response } from "express";
+import { db } from "../db";
 import {
   getAllUsers,
   getUserById,
   deleteUserById,
   updateUserByID,
+  addNewUser,
 } from "../models/users";
 
 const usersRouter = express.Router();
 
-usersRouter.route("/").get(async (_: Request, res: Response) => {
-  const allUsers = await getAllUsers();
-  res.send(allUsers);
-});
+usersRouter
+  .route("/")
+  .get(async (_: Request, res: Response) => {
+    try {
+      const allUsers = await getAllUsers();
+      res.send(allUsers);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  })
+  .post(async (req: Request, res: Response) => {
+    try {
+      const { username, email, passwordHash } = req.body;
+      if (!username || !email || !passwordHash) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      const newUser = { username, email, passwordHash, isAdmin: 0 };
+      try {
+        const result = await addNewUser(newUser);
+        res
+          .status(201)
+          .json({ message: "User created", id: result.lastInsertRowid });
+      } catch (err: any) {
+        if (
+          err &&
+          typeof err === "object" &&
+          "code" in err &&
+          err.code === "SQLITE_CONSTRAINT_UNIQUE"
+        ) {
+          return res
+            .status(409)
+            .json({ message: "Username or email already exists" });
+        }
+        console.error(err); // Log the error for debugging
+        throw err;
+      }
+    } catch (error) {
+      console.error(error); // Log the error for debugging
+      res.status(500).json({ message: "Failed to create user" });
+    }
+  });
 
 usersRouter
   .route("/:id")
   .get(async (req: Request, res: Response) => {
-    const user = await getUserById(parseInt(req.params.id));
-    if (user) {
-      res.send(user);
-    } else {
-      res.status(404).send();
+    try {
+      const user = await getUserById(parseInt(req.params.id));
+      if (user) {
+        res.send(user);
+      } else {
+        res.status(404).send();
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user" });
     }
   })
   .put(async (req: Request, res: Response) => {
