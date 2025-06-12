@@ -14,5 +14,4 @@ export const users = sqliteTable("users", {
   email: text().notNull().unique(),
   passwordHash: text().notNull(), // Store hashed password, not plaintext
   isAdmin: int().notNull().default(0), // 1 for admin, 0 for regular user
-
 });

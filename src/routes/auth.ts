@@ -1,59 +1,59 @@
-import express, { Request, Response } from "express";
-// import { db } from "../db";
-// import { users } from "../schema";
-import {
-  getAllUsers,
-  getUserById,
-  deleteUserById,
-  updateUserByID,
-} from "../models/users";
+import { Router } from "express";
+import { db } from "../db";
+import { users } from "../schema";
+import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 
-const usersRouter = express.Router();
+const authRouter = Router();
 
-usersRouter.route("/").get(async (_: Request, res: Response) => {
-  const allUsers = await getAllUsers();
-  res.send(allUsers);
+authRouter.post("/register", async (req, res) => {
+  const { username, password, isAdmin } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password required" });
+  }
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await db.insert(users).values({
+      username,
+      passwordHash,
+      isAdmin: isAdmin ? 1 : 0,
+      email: req.body.email || "",
+    });
+    res.status(201).json({ message: "User created" });
+  } catch (err) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "code" in err &&
+      err.code === "SQLITE_CONSTRAINT_UNIQUE"
+    ) {
+      return res.status(409).json({ error: "Username already exists" });
+    }
+    res.status(500).json({ error: "Failed to create user" });
+  }
 });
 
-usersRouter
-  .route("/:id")
-  .get(async (req: Request, res: Response) => {
-    const user = await getUserById(parseInt(req.params.id));
-    if (user) {
-      res.send(user);
-    } else {
-      res.status(404).send();
-    }
-  })
-  .put(async (req: Request, res: Response) => {
-    try {
-      const userId = parseInt(req.params.id);
-      if (isNaN(userId)) {
-        res.status(400).json({ message: "Invalid user ID" });
-        return;
-      }
-      const updatedData = req.body;
-      const result = await updateUserByID(userId, updatedData);
-      if (result) {
-        res.status(200).json({ message: "User updated successfully" });
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .json({ message: "An error occurred while updating the user" });
-    }
-  })
-  .delete(async (req, res) => {
-    try {
-      await deleteUserById(parseInt(req.params.id));
-      res.status(200).send({ message: "Deleted User" });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Didn't delete user." });
-    }
-  });
+// Login
+authRouter.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password required" });
+  }
+  try {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .get();
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+    res.json({ id: user.id, username: user.username, isAdmin: user.isAdmin });
+  } catch {
+    res.status(500).json({ error: "Login failed" });
+  }
+});
 
-export { usersRouter };
+export { authRouter };
+
+// add auth middleware - JWT?

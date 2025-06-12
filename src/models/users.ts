@@ -3,7 +3,7 @@ import { db } from "../db";
 import { users } from "../schema";
 
 interface User {
-  id: number;
+  id?: number;
   username: string;
   email: string;
   passwordHash: string;
