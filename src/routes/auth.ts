@@ -3,6 +3,7 @@ import { db } from "../db";
 import { users } from "../schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 
 const authRouter = Router();
 
@@ -56,4 +57,8 @@ authRouter.post("/login", async (req, res) => {
 
 export { authRouter };
 
-// add auth middleware - JWT?
+const SECRET_KEY = "your_secret_key"; // Replace with a secure key
+
+export const generateToken = (userId: string) => {
+  return jwt.sign({ userId }, SECRET_KEY, { expiresIn: "1h" });
+};

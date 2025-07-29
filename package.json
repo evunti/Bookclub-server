@@ -25,12 +25,14 @@
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.41.0",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.8.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.22",
+    "@types/jsonwebtoken": "^9.0.10",
     "drizzle-kit": "^0.31.1",
     "tsx": "^4.19.3"
   }
