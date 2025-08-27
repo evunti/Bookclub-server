@@ -14,6 +14,25 @@ authRouter.post("/register", async (req, res) => {
     return res.status(400).json({ error: "Username and password required" });
   }
   try {
+    // Check for existing username or email
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .get();
+    if (existingUser) {
+      return res.status(409).json({ error: "Username already exists" });
+    }
+    if (req.body.email) {
+      const existingEmail = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, req.body.email))
+        .get();
+      if (existingEmail) {
+        return res.status(409).json({ error: "Email already exists" });
+      }
+    }
     const passwordHash = await bcrypt.hash(password, 10);
     await db.insert(users).values({
       username,
@@ -23,14 +42,6 @@ authRouter.post("/register", async (req, res) => {
     });
     res.status(201).json({ message: "User created" });
   } catch (err) {
-    if (
-      err &&
-      typeof err === "object" &&
-      "code" in err &&
-      err.code === "SQLITE_CONSTRAINT_UNIQUE"
-    ) {
-      return res.status(409).json({ error: "Username already exists" });
-    }
     res.status(500).json({ error: "Failed to create user" });
   }
 });
@@ -39,7 +50,9 @@ authRouter.post("/register", async (req, res) => {
 const SECRET_KEY = "your_secret_key"; // Replace with a secure key
 
 export const generateToken = (userId: string | number) => {
-  return jwt.sign({ userId: userId.toString() }, SECRET_KEY, { expiresIn: "1h" });
+  return jwt.sign({ userId: userId.toString() }, SECRET_KEY, {
+    expiresIn: "1h",
+  });
 };
 
 authRouter.post("/login", async (req, res) => {
