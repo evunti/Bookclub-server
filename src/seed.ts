@@ -15,7 +15,6 @@ async function main() {
     },
   ]);
 
-  // Seed users with hashed passwords
   const password1 = await bcrypt.hash("password123", 10);
   const password2 = await bcrypt.hash("adminpass", 10);
   await db.insert(users).values([

@@ -14,7 +14,6 @@ authRouter.post("/register", async (req, res) => {
     return res.status(400).json({ error: "Username and password required" });
   }
   try {
-    // Check for existing username or email
     const existingUser = await db
       .select()
       .from(users)
@@ -47,7 +46,7 @@ authRouter.post("/register", async (req, res) => {
 });
 
 // Login
-const SECRET_KEY = "your_secret_key"; // Replace with a secure key
+const SECRET_KEY = "your_secret_key";
 
 export const generateToken = (userId: string | number) => {
   return jwt.sign({ userId: userId.toString() }, SECRET_KEY, {
@@ -70,14 +69,13 @@ authRouter.post("/login", async (req, res) => {
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
-    // Generate JWT
     const token = generateToken(user.id);
 
     res.json({
       id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
-      token, // Include token in response
+      token,
     });
   } catch {
     res.status(500).json({ error: "Login failed" });
@@ -96,7 +94,7 @@ export const authenticateToken = (
 
   try {
     const verified = jwt.verify(token, SECRET_KEY);
-    (req as any).user = verified; // Use 'any' to avoid type errors for custom properties
+    (req as any).user = verified;
     next();
   } catch (error) {
     res.status(403).send("Invalid Token");

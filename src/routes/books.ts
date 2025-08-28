@@ -90,7 +90,7 @@ booksRouter
       }
 
       const updatedData = req.body;
-      // If coverUrl is missing but title/author are present, fetch and add it
+
       if (!updatedData.coverUrl && updatedData.title && updatedData.author) {
         const coverUrl = await getBookCoverURL(
           updatedData.title,
